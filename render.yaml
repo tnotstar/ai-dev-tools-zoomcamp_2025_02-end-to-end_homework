@@ -5,8 +5,8 @@ services:
     runtime: docker
     repo: https://github.com/tnotstar/ai-dev-tools-zoomcamp_2025_02-end-to-end_homework # Render will auto-fill this if connected
     plan: free
-    dockerContext: .
-    dockerfilePath: backend/Dockerfile
+    dockerContext: backend
+    dockerfilePath: Dockerfile
     envVars:
       - key: PORT
         value: 10000 # Render expects web services to listen on port 10000 by default or honors PORT env
@@ -17,8 +17,8 @@ services:
     name: coding-interview-frontend
     runtime: docker
     plan: free
-    dockerContext: .
-    dockerfilePath: frontend/Dockerfile
+    dockerContext: frontend
+    dockerfilePath: Dockerfile
     envVars:
       - key: PORT
         value: 5173
