@@ -4,6 +4,11 @@ A real-time collaborative coding platform built with React, Node.js, and Socket.
 
 > This is my second homework from the 2025 cohort of ai-dev-tools-zoomcamp
 
+## 🌐 Live Demo
+
+**Google Cloud Run:** [https://ai-dev-tools-zoomcamp-2025-02-end-to-end-homework-428800185377.europe-west1.run.app](https://ai-dev-tools-zoomcamp-2025-02-end-to-end-homework-428800185377.europe-west1.run.app)
+**Render:** [https://coding-interview-platform-sq8n.onrender.com/](https://coding-interview-platform-sq8n.onrender.com/)
+
 ## ✨ Features
 
 - **Real-time Collaborative Editing**: Multiple users can edit code simultaneously with instant synchronization
@@ -652,3 +657,32 @@ For issues or questions, please open a GitHub issue or contact the development t
 >
 > Explanation: Briefly explain which library you chose and why, and how you handled the stdout redirection.
 
+## Prompt for Docker Unification for Deployment
+
+> Context: Previously, we dockerized the application using separate containers. However, for a simplified deployment scenario (Question 6 of my homework), I need to package both the Frontend and the Backend into a single Docker image.
+>
+> Task: Act as a DevOps Engineer. Please create a single Dockerfile that handles the build process for the frontend and sets up the backend to serve it.
+>
+> Technical Requirements (Multi-Stage Build):
+>
+> Stage 1 (Build): Use a Node.js base image to install frontend dependencies and run npm run build (Vite) to generate the static files (usually in dist/).
+>
+> Stage 2 (Production):
+>
+> Use a lightweight Node.js base image.
+>
+> Copy the backend code.
+>
+> Crucial: Copy the built frontend artifacts (dist/ folder) from Stage 1 into the backend's directory.
+>
+> Server Logic Update:
+>
+> Provide the specific code snippet I need to add to my Express server.js to serve these static files (e.g., app.use(express.static(...))) and handle the "catch-all" route (*) to support React Router (SPA).
+>
+> Deliverables:
+>
+> The content of the unified Dockerfile.
+>
+> The code snippet to update server.js.
+>
+> Explicit Question Answer: Please explicitly state which base image you used for the final stage (e.g., node:18-alpine), as I need to answer this for my homework.
