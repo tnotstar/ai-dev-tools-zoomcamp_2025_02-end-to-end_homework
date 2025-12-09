@@ -377,97 +377,188 @@ For issues or questions, please open a GitHub issue or contact the development t
 ## Initial prompt
 
 > Context & Persona: Act as a Senior Full Stack Software Architect. We are building an MVP for an "Online Coding Interview Platform". The goal is to create a collaborative environment where an interviewer can share a link with a candidate, and both can write and run code in real-time.
-
-Technical Stack:
-
-Frontend: React (Vite), TailwindCSS for styling, monaco-editor (VS Code editor) for the code panel.
-
-Backend: Node.js with Express.
-
-Real-time Communication: Socket.io (crucial for syncing code changes across users).
-
-Execution: The code must be executed safely in the browser (client-side). For this MVP, support JavaScript execution using a sandboxed approach (e.g., catching console logs from a Web Worker or new Function) to avoid backend security risks.
-
-API Documentation: OpenAPI 3.0 (Swagger).
-
-Functional Requirements:
-
-Session Management: The system must generate unique room IDs (e.g., /room/uuid). Anyone with the link joins that specific coding session.
-
-Collaborative Editing: When User A types, User B sees the changes immediately via Socket.io events.
-
-Syntax Highlighting: The editor must support syntax highlighting (configure Monaco for Javascript/Python).
-
-Code Execution: A "Run" button that captures the code from the editor, executes it safely in the browser context, and displays the output (logs/errors) in a terminal window below the editor.
-
-Deliverables (Response Format): Please provide the complete implementation in a single response following this structure:
-
-Project Structure: A file tree overview.
-
-Backend Implementation:
-
-server.js: Express setup, Socket.io logic for room joining and code broadcasting.
-
-openapi.yaml: The OpenAPI 3.0 specification document describing the HTTP endpoints (e.g., health check, room creation).
-
-Frontend Implementation:
-
-App.jsx: Main routing logic (Room creation vs. Room view).
-
-CodeEditor.jsx: The Monaco editor component integrated with Socket.io client.
-
-Terminal.jsx: Component to display code execution output.
-
-Execution Logic: Explain briefly how the client-side execution is handled safely.
-
-Setup Instructions: npm install commands to get this running locally.
-
-Important Constraint: Ensure all code provided is functional, imports are correct, and the WebSocket logic handles the "broadcast" correctly so loops are avoided (i.e., don't re-broadcast a change back to the sender).
+>
+> Technical Stack:
+>
+> Frontend: React (Vite), TailwindCSS for styling, monaco-editor (VS Code editor) for the code panel.
+>
+> Backend: Node.js with Express.
+>
+> Real-time Communication: Socket.io (crucial for syncing code changes across users).
+>
+> Execution: The code must be executed safely in the browser (client-side). For this MVP, support JavaScript execution using a sandboxed approach (e.g., catching console logs from a Web Worker or new Function) to avoid backend security risks.
+>
+> API Documentation: OpenAPI 3.0 (Swagger).
+>
+> Functional Requirements:
+>
+> Session Management: The system must generate unique room IDs (e.g., /room/uuid). Anyone with the link joins that specific coding session.
+>
+> Collaborative Editing: When User A types, User B sees the changes immediately via Socket.io events.
+>
+> Syntax Highlighting: The editor must support syntax highlighting (configure Monaco for Javascript/Python).
+>
+> Code Execution: A "Run" button that captures the code from the editor, executes it safely in the browser context, and displays the output (logs/errors) in a terminal window below the editor.
+>
+> Deliverables (Response Format): Please provide the complete implementation in a single response following this structure:
+>
+> Project Structure: A file tree overview.
+>
+> Backend Implementation:
+>
+> server.js: Express setup, Socket.io logic for room joining and code broadcasting.
+>
+> openapi.yaml: The OpenAPI 3.0 specification document describing the HTTP endpoints (e.g., health check, room creation).
+>
+> Frontend Implementation:
+>
+> App.jsx: Main routing logic (Room creation vs. Room view).
+>
+> CodeEditor.jsx: The Monaco editor component integrated with Socket.io client.
+>
+> Terminal.jsx: Component to display code execution output.
+>
+> Execution Logic: Explain briefly how the client-side execution is handled safely.
+>
+> Setup Instructions: npm install commands to get this running locally.
+>
+> Important Constraint: Ensure all code provided is functional, imports are correct, and the WebSocket logic handles the "broadcast" correctly so loops are avoided (i.e., don't re-broadcast a change back to the sender).
 
 ## Prompt for test cases
 
-Context: Continuing with the "Online Coding Interview Platform" project we just implemented. I now need to ensure the reliability of the application by adding automated tests for both the frontend and backend.
+> Context: Continuing with the "Online Coding Interview Platform" project we just implemented. I now need to ensure the reliability of the application by adding automated tests for both the frontend and backend.
+>
+> Task: Act as a Lead QA Automation Engineer. Please generate the test files and update the documentation following these requirements:
+>
+> 1. Backend Testing (Node/Express):
+>
+> Stack: Use jest and supertest.
+> Scope: Create a test file server.test.js.
+>
+> Test Cases:
+>
+> GET /health: Verify the server returns a 200 OK status.
+> POST /room: Verify it returns a unique room ID and a 201 Created status.
+>
+> Socket.io: (Optional but recommended) Verify that a client can connect to the websocket server.
+>
+> 2. Frontend Testing (React/Vite):
+>
+> Stack: Use vitest (native for Vite) and @testing-library/react.
+>
+> Scope: Create a test file App.test.jsx.
+>
+> Test Cases:
+>
+> Rendering: Verify that the "Join Room" or "Create Room" buttons render correctly on the landing page.
+> Editor Component: Verify that the code editor container loads (mocking the heavy monaco-editor if necessary to prevent test crashes).
+>
+> 3. Documentation Update (README.md):
+>
+> Provide an updated "Testing" section for the README.md.
+>
+> Include the specific commands to install the testing dependencies (npm install -D ...) and the commands to run the tests (npm test).
+>
+> Deliverables:
+>
+> The code for backend/tests/server.test.js (or equivalent path).
+>
+> The code for frontend/src/App.test.jsx.
+>
+> The modified package.json scripts needed to run these tests.
+>
+> The updated text snippet for the README.md.
 
-Task: Act as a Lead QA Automation Engineer. Please generate the test files and update the documentation following these requirements:
 
-1. Backend Testing (Node/Express):
+## Prompt for integration tests
 
-Stack: Use jest and supertest.
+> Context: We have successfully implemented unit tests for both the React frontend (Vitest) and Node.js backend  (Jest). Now, we need to implement End-to-End (E2E) Integration Tests to verify the complete system flow.
+>
+> The Challenge: Since this is a real-time collaboration app, we need to test that two different users in the same "room" can see each other's updates instantly via Socket.io.
+>
+> Task: Act as a Senior SDET (Software Development Engineer in Test). Please implement E2E tests using Playwright.
+>
+> Requirements:
+>
+> Tooling: Use Playwright for the test runner.
+>
+> Configuration (playwright.config.ts):
+>
+> Configure the webServer property to ensure both the Frontend (Vite, port 5173) and Backend (Express, port 3000) are started automatically before the tests run.
+>
+> The Test Scenario (tests/collaboration.spec.ts):
+>
+> Scenario: "Real-time Code Synchronization".
+>
+> Step 1: Create two separate browser contexts (representing User A and User B).
+>
+> Step 2: User A navigates to the app and generates a Room ID.
+>
+> Step 3: User B navigates to that exact same Room URL.
+>
+> Step 4: User A types console.log("Hello World") into the Monaco Editor.
+>
+> Step 5: ASSERT that User B's editor content automatically updates to contain console.log("Hello World").
+>
+> Dependencies: List the npm install command needed to add Playwright and necessary browsers.
+>
+> Documentation: Provide the command to run these E2E tests (e.g., npx playwright test).
+>
+> Deliverables:
+>
+> playwright.config.ts (with the webServer block correctly configured to start backend and frontend).
+> tests/collaboration.spec.ts (handling the multi-user WebSocket logic).
+>
+> Updates to package.json scripts if necessary.
 
-Scope: Create a test file server.test.js.
+## Prompt for Dockerization
 
-Test Cases:
-
-GET /health: Verify the server returns a 200 OK status.
-
-POST /room: Verify it returns a unique room ID and a 201 Created status.
-
-Socket.io: (Optional but recommended) Verify that a client can connect to the websocket server.
-
-2. Frontend Testing (React/Vite):
-
-Stack: Use vitest (native for Vite) and @testing-library/react.
-
-Scope: Create a test file App.test.jsx.
-
-Test Cases:
-
-Rendering: Verify that the "Join Room" or "Create Room" buttons render correctly on the landing page.
-
-Editor Component: Verify that the code editor container loads (mocking the heavy monaco-editor if necessary to prevent test crashes).
-
-3. Documentation Update (README.md):
-
-Provide an updated "Testing" section for the README.md.
-
-Include the specific commands to install the testing dependencies (npm install -D ...) and the commands to run the tests (npm test).
-
-Deliverables:
-
-The code for backend/tests/server.test.js (or equivalent path).
-
-The code for frontend/src/App.test.jsx.
-
-The modified package.json scripts needed to run these tests.
-
-The updated text snippet for the README.md.
+> Context: We have a fully functioning "Online Coding Interview Platform" with a React (Vite) frontend and a Node.js (Express/Socket.io) backend. We also have unit and E2E tests.
+>
+> Goal: I want to package the entire application so that anyone (e.g., a grading professor) can run the whole system with a single command: docker-compose up.
+>
+> Task: Act as a Senior DevOps Engineer. Create the necessary Docker configuration files.
+>
+> Requirements:
+>
+> Backend Dockerfile:
+>
+> Use a lightweight Node.js image (e.g., node:18-alpine).
+>
+> Expose the correct port (e.g., 3000).
+>
+> Ensure npm install runs efficiently.
+>
+> Frontend Dockerfile:
+>
+> Use a lightweight Node.js image.
+>
+> Since this is a Vite app, configure it to expose the server to the network (host: '0.0.0.0').
+>
+> Crucial: We want to run this in "development" mode or "preview" mode so it serves the app on port 5173.
+>
+> Docker Compose (docker-compose.yml):
+>
+> Orchestrate both services.
+>
+> Port Mapping: Map host ports to container ports (e.g., Host 3000 -> Container 3000, Host 5173 -> Container 5173).
+>
+> Environment Variables: Ensure the Frontend knows how to connect to the Backend WebSocket (e.g., set VITE_API_URL=http://localhost:3000 because the browser runs on the host machine, not inside the frontend container network).
+>
+> Volumes: (Optional) Add volumes for hot-reloading code changes if I edit files locally.
+>
+> Ignore Files: Generate a .dockerignore file to prevent copying node_modules into the image (a common mistake that slows down builds).
+>
+> Documentation: Add a "How to Run with Docker" section for the README.md.
+>
+> Deliverables:
+>
+> backend/Dockerfile
+>
+> frontend/Dockerfile
+>
+> .dockerignore
+>
+> docker-compose.yml
+>
+> Updated README.md instructions.
