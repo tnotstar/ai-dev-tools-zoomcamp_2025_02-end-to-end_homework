@@ -6,7 +6,6 @@ A real-time collaborative coding platform built with React, Node.js, and Socket.
 
 ## 🌐 Live Demo
 
-**Google Cloud Run:** [https://ai-dev-tools-zoomcamp-2025-02-end-to-end-homework-428800185377.europe-west1.run.app](https://ai-dev-tools-zoomcamp-2025-02-end-to-end-homework-428800185377.europe-west1.run.app)
 **Render:** [https://coding-interview-platform-sq8n.onrender.com/](https://coding-interview-platform-sq8n.onrender.com/)
 
 ## ✨ Features
