@@ -251,6 +251,11 @@ npm run test:backend
 npm run test:frontend
 ```
 
+**End-to-End Tests (Playwright):**
+```bash
+npm run test:e2e
+```
+
 ### Manual Testing
 
 ### Test Real-Time Sync
