@@ -235,6 +235,24 @@ cors: {
 
 ## 🧪 Testing the Application
 
+### Automated Testing
+Run the automated test suite for both backend and frontend:
+```bash
+npm test
+```
+
+**Backend Tests (Jest + Supertest):**
+```bash
+npm run test:backend
+```
+
+**Frontend Tests (Vitest + React Testing Library):**
+```bash
+npm run test:frontend
+```
+
+### Manual Testing
+
 ### Test Real-Time Sync
 1. Open the application in two different browser windows
 2. Create a room in one window
@@ -383,3 +401,50 @@ Setup Instructions: npm install commands to get this running locally.
 
 Important Constraint: Ensure all code provided is functional, imports are correct, and the WebSocket logic handles the "broadcast" correctly so loops are avoided (i.e., don't re-broadcast a change back to the sender).
 
+## Prompt for test cases
+
+Context: Continuing with the "Online Coding Interview Platform" project we just implemented. I now need to ensure the reliability of the application by adding automated tests for both the frontend and backend.
+
+Task: Act as a Lead QA Automation Engineer. Please generate the test files and update the documentation following these requirements:
+
+1. Backend Testing (Node/Express):
+
+Stack: Use jest and supertest.
+
+Scope: Create a test file server.test.js.
+
+Test Cases:
+
+GET /health: Verify the server returns a 200 OK status.
+
+POST /room: Verify it returns a unique room ID and a 201 Created status.
+
+Socket.io: (Optional but recommended) Verify that a client can connect to the websocket server.
+
+2. Frontend Testing (React/Vite):
+
+Stack: Use vitest (native for Vite) and @testing-library/react.
+
+Scope: Create a test file App.test.jsx.
+
+Test Cases:
+
+Rendering: Verify that the "Join Room" or "Create Room" buttons render correctly on the landing page.
+
+Editor Component: Verify that the code editor container loads (mocking the heavy monaco-editor if necessary to prevent test crashes).
+
+3. Documentation Update (README.md):
+
+Provide an updated "Testing" section for the README.md.
+
+Include the specific commands to install the testing dependencies (npm install -D ...) and the commands to run the tests (npm test).
+
+Deliverables:
+
+The code for backend/tests/server.test.js (or equivalent path).
+
+The code for frontend/src/App.test.jsx.
+
+The modified package.json scripts needed to run these tests.
+
+The updated text snippet for the README.md.
