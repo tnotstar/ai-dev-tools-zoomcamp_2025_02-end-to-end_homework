@@ -314,6 +314,7 @@ npx kill-port 5173
 ## 🚀 Production Deployment
 
 ### Build Frontend
+
 ```bash
 cd frontend
 npm run build
@@ -322,6 +323,7 @@ npm run build
 The `dist/` folder can be served statically or integrated with the Express backend.
 
 ### Environment Variables
+
 Create `.env` file:
 ```env
 PORT=3000
@@ -330,6 +332,7 @@ FRONTEND_URL=https://your-domain.com
 ```
 
 ### Serve Frontend from Backend (Optional)
+
 ```javascript
 // In server.js
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
@@ -351,7 +354,75 @@ To run the entire application (frontend + backend) using Docker:
     -   Backend API: http://localhost:3000
 
 The frontend is configured to communicate with the backend via `http://localhost:3000`. Hot-reloading is enabled for local development.
-s.
+
+## 🚀 Deploying to Render.com
+
+We have included a `render.yaml` Blueprint file to make deploying to Render.com easy.
+
+1.  **Push your code** to a GitHub/GitLab repository.
+2.  **Log in to Render.com** and go to "Blueprints".
+3.  **Click "New Blueprint Instance"** and select your repository.
+4.  Render will automatically detect the `render.yaml` file and set up both the backend and frontend services.
+5.  **Click "Apply"** to deploy.
+
+> **Note**: The frontend service relies on the backend URL. Render's Blueprint automatically routes the backend URL to the frontend via the `VITE_API_URL` environment variable.
+
+## ☁️ Deploying to Google Cloud Run
+
+To deploy the application to Google Cloud Run, follow these steps:
+
+### Prerequisites
+- Google Cloud SDK (`gcloud` CLI) installed and authenticated
+- A Google Cloud Project
+
+### 1. Run the Deployment Script
+We have provided a convenience script `deploy.sh` that automates the entire process:
+1.  Enables required Google Cloud services (Artifact Registry, Cloud Build, Cloud Run).
+2.  Creates an Artifact Registry repository.
+3.  Builds and deploys the **Backend** service.
+4.  Builds and deploys the **Frontend** service (automatically linking it to the deployed backend).
+
+```bash
+# Make the script executable
+chmod +x deploy.sh
+
+# Run the deployment
+./deploy.sh
+```
+
+### 2. Manual Deployment Steps (Reference)
+If you prefer to run the commands manually:
+
+**Backend:**
+```bash
+# Enable Sticky Sessions for Socket.io
+gcloud run deploy interview-backend \
+  --source . \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --session-affinity \
+  --port 3000
+```
+
+**Frontend:**
+```bash
+# Get Backend URL
+BACKEND_URL=$(gcloud run services describe interview-backend --region us-central1 --format 'value(status.url)')
+
+# Deploy Frontend with Backend URL
+gcloud run deploy interview-frontend \
+  --source frontend \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --set-env-vars VITE_API_URL=$BACKEND_URL
+```
+
+### Clean Up
+To avoid unexpected charges, delete the services when you are done:
+```bash
+gcloud run services delete interview-backend --region us-central1
+gcloud run services delete interview-frontend --region us-central1
+```
 
 ## 🤝 Contributing
 
