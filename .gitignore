@@ -141,4 +141,7 @@ dist
 #  exclude from AI features like autocomplete and code analysis. Recommended for sensitive data
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
-.cursorindexingignore
+
+# Playwright
+playwright-report/
+test-results/
