@@ -4,7 +4,15 @@ import { io } from 'socket.io-client';
 import CodeEditor from '../components/CodeEditor';
 import Terminal from '../components/Terminal';
 
-const SOCKET_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const getSocketUrl = () => {
+  let url = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+  if (!url.startsWith('http')) {
+    url = `https://${url}`;
+  }
+  return url;
+};
+
+const SOCKET_URL = getSocketUrl();
 
 function Room() {
   const { roomId } = useParams();

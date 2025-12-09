@@ -1,7 +1,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const getApiUrl = () => {
+  let url = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+  if (!url.startsWith('http')) {
+    url = `https://${url}`;
+  }
+  return url;
+};
+
+const API_URL = getApiUrl();
 
 function Home() {
   const [loading, setLoading] = useState(false);
