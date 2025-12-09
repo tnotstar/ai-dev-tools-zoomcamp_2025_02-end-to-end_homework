@@ -94,7 +94,7 @@ npm run dev
 ```
 
 This will start:
-- Backend server on `http://localhost:3001`
+- Backend server on `http://localhost:3000`
 - Frontend dev server on `http://localhost:5173`
 
 #### Option B: Run Separately
@@ -130,7 +130,7 @@ npm run client
 
 Once the backend is running, access the interactive API documentation at:
 
-**http://localhost:3001/api-docs**
+**http://localhost:3000/api-docs**
 
 ### Available Endpoints
 
@@ -213,7 +213,7 @@ Socket.io handles bidirectional communication between the server and all connect
 ### Backend Port
 Change in `backend/server.js`:
 ```javascript
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 ```
 
 ### Frontend Dev Server
@@ -285,15 +285,15 @@ console.log("Factorial of 5:", factorial(5));
 
 ### Port Already in Use
 ```bash
-# Kill process on port 3001 (backend)
-npx kill-port 3001
+# Kill process on port 3000 (backend)
+npx kill-port 3000
 
 # Kill process on port 5173 (frontend)
 npx kill-port 5173
 ```
 
 ### Socket.io Connection Issues
-- Check that backend is running on port 3001
+- Check that backend is running on port 3000
 - Verify CORS settings match frontend URL
 - Check browser console for WebSocket errors
 
@@ -315,7 +315,7 @@ The `dist/` folder can be served statically or integrated with the Express backe
 ### Environment Variables
 Create `.env` file:
 ```env
-PORT=3001
+PORT=3000
 NODE_ENV=production
 FRONTEND_URL=https://your-domain.com
 ```
@@ -325,6 +325,24 @@ FRONTEND_URL=https://your-domain.com
 // In server.js
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
 ```
+
+## Running with Docker
+
+To run the entire application (frontend + backend) using Docker:
+
+1.  Make sure you have Docker and Docker Compose installed.
+2.  Run the following command in the project root:
+
+    ```bash
+    docker-compose up
+    ```
+
+3.  The application will be available at:
+    -   Frontend: http://localhost:5173
+    -   Backend API: http://localhost:3000
+
+The frontend is configured to communicate with the backend via `http://localhost:3000`. Hot-reloading is enabled for local development.
+s.
 
 ## 🤝 Contributing
 
