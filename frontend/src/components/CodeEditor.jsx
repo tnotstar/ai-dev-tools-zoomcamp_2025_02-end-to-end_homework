@@ -2,7 +2,7 @@ import Editor from '@monaco-editor/react';
 import { useRef } from 'react';
 import { executeCode } from '../utils/codeExecutor';
 
-function CodeEditor({ code, onChange, onRun }) {
+function CodeEditor({ code, onChange, onRun, language = 'javascript', onLanguageChange }) {
   const editorRef = useRef(null);
 
   const handleEditorDidMount = (editor, monaco) => {
@@ -37,12 +37,12 @@ function CodeEditor({ code, onChange, onRun }) {
 
     onRun([{
       type: 'info',
-      content: '🚀 Executing code...',
+      content: language === 'python' ? '🐍 Initializing Python environment...' : '🚀 Executing code...',
       timestamp: new Date().toISOString()
     }]);
 
     try {
-      const result = await executeCode(code);
+      const result = await executeCode(code, language);
       onRun(result);
     } catch (error) {
       onRun([{
@@ -63,7 +63,18 @@ function CodeEditor({ code, onChange, onRun }) {
             <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
             <div className="w-3 h-3 rounded-full bg-green-500"></div>
           </div>
-          <span className="text-gray-400 text-sm font-medium">main.js</span>
+          
+          {/* Language Selector */}
+          <div className="relative">
+            <select
+              value={language}
+              onChange={(e) => onLanguageChange(e.target.value)}
+              className="bg-gray-700 text-white text-sm rounded px-2 py-1 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="javascript">JavaScript</option>
+              <option value="python">Python</option>
+            </select>
+          </div>
         </div>
 
         <button
@@ -82,7 +93,7 @@ function CodeEditor({ code, onChange, onRun }) {
       <div className="flex-1">
         <Editor
           height="100%"
-          defaultLanguage="javascript"
+          language={language}
           value={code}
           onChange={onChange}
           onMount={handleEditorDidMount}

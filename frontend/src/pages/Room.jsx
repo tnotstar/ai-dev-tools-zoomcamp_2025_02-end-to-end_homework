@@ -16,6 +16,8 @@ function Room() {
   const [isConnected, setIsConnected] = useState(false);
   const [roomError, setRoomError] = useState(false);
 
+  const [language, setLanguage] = useState('javascript');
+
   useEffect(() => {
     // Initialize Socket.io connection
     const newSocket = io(SOCKET_URL, {
@@ -113,6 +115,42 @@ function Room() {
     }]);
   };
 
+  const DEFAULT_CODE = {
+    javascript: `// Welcome to the coding interview!
+// Start typing your code here...
+
+function hello() {
+  console.log("Hello, World!");
+}
+
+hello();`,
+    python: `# Welcome to the coding interview!
+# Start typing your code here...
+
+def hello():
+    print("Hello, World!")
+
+hello()`
+  };
+
+  const handleLanguageChange = (newLanguage) => {
+    setLanguage(newLanguage);
+    
+    // Auto-switch code if it matches a default template or is empty
+    const normalize = (str) => str.replace(/\r\n/g, '\n').trim();
+    const currentNormalized = normalize(code);
+    const jsNormalized = normalize(DEFAULT_CODE.javascript);
+    const pythonNormalized = normalize(DEFAULT_CODE.python);
+    
+    if (currentNormalized === jsNormalized || currentNormalized === pythonNormalized || !currentNormalized) {
+      const newCode = DEFAULT_CODE[newLanguage];
+      setCode(newCode);
+      if (socket && isConnected) {
+        socket.emit('code-change', { roomId, code: newCode });
+      }
+    }
+  };
+
   if (roomError) {
     return null;
   }
@@ -167,6 +205,8 @@ function Room() {
           code={code}
           onChange={handleCodeChange}
           onRun={handleRunCode}
+          language={language}
+          onLanguageChange={handleLanguageChange}
         />
         <Terminal output={output} onClear={() => setOutput([])} />
       </div>

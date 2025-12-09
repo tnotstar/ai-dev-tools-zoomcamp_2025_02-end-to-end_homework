@@ -11,12 +11,21 @@
  * 4. Prevents access to dangerous globals (limited by browser security)
  */
 
-export const executeCode = (code) => {
+import { executePython } from './pyodideUtils';
+
+/**
+ * Safe Code Executor (JS & Python)
+ */
+export const executeCode = async (code, language = 'javascript') => {
+  if (language === 'python') {
+    return await executePython(code);
+  }
+
+  // Existing JavaScript Execution Logic
   return new Promise((resolve) => {
     const outputs = [];
     const startTime = Date.now();
 
-    // Create a custom console that captures all outputs
     const customConsole = {
       log: (...args) => {
         outputs.push({
@@ -49,8 +58,6 @@ export const executeCode = (code) => {
     };
 
     try {
-      // Create a sandboxed execution environment
-      // We use Function constructor to create a new scope
       const sandboxedFunction = new Function(
         'console',
         `
@@ -59,12 +66,10 @@ export const executeCode = (code) => {
         `
       );
 
-      // Execute the code with the custom console
       sandboxedFunction(customConsole);
 
       const executionTime = Date.now() - startTime;
 
-      // Add execution summary
       if (outputs.length === 0) {
         outputs.push({
           type: 'info',
@@ -82,14 +87,12 @@ export const executeCode = (code) => {
       resolve(outputs);
 
     } catch (error) {
-      // Capture syntax errors and runtime errors
       outputs.push({
         type: 'error',
         content: `${error.name}: ${error.message}`,
         timestamp: new Date().toISOString()
       });
 
-      // Add stack trace if available
       if (error.stack) {
         const stackLines = error.stack.split('\n').slice(1, 4);
         stackLines.forEach(line => {

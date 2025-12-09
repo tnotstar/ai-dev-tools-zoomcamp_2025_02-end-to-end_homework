@@ -51,6 +51,7 @@ coding-interview-platform/
 - **React 18** with Vite for fast development
 - **TailwindCSS** for modern, responsive styling
 - **Monaco Editor** (@monaco-editor/react) for code editing
+- **Pyodide** (WASM) for client-side Python execution
 - **Socket.io Client** for real-time communication
 - **React Router** for navigation
 
@@ -178,6 +179,14 @@ For enhanced security, the codebase includes commented Web Worker implementation
 - Complete thread isolation
 - No DOM access
 - Better performance for heavy computations
+
+### Python Execution (WebAssembly)
+
+Python code is executed completely **client-side** using [Pyodide](https://pyodide.org/).
+- Runs in a WebAssembly environment within the browser
+- `sys.stdout` and `sys.stderr` are intercepted to display output in the terminal
+- Isolated from the host system
+- No backend server execution required
 
 ### Socket.io Security
 
@@ -561,4 +570,44 @@ For issues or questions, please open a GitHub issue or contact the development t
 >
 > docker-compose.yml
 >
-> Updated README.md instructions.
+
+## Prompt for Python Support (Pyodide)
+
+> Context: We have a working "Online Coding Interview Platform" where users can write and execute JavaScript safely in the browser. The current setup has a CodeEditor component (Monaco) and a Terminal component to show logs.
+>
+> Task: Act as a Senior Frontend Engineer specializing in WebAssembly. I need to extend the platform to support Python code execution entirely in the browser (client-side) using WebAssembly (WASM).
+>
+> Requirements:
+>
+> WASM Library: Integrate Pyodide (or a similar robust WASM solution) to execute Python code.
+>
+> Note: Do not send code to the backend. Execution must happen locally in the user's browser.
+>
+> UI Updates:
+>
+> Add a Language Selector (dropdown) in the frontend (e.g., above the Editor) to switch between "JavaScript" and "Python".
+>
+> Update the Monaco Editor instance to change syntax highlighting based on the selected language.
+>
+> Execution Logic:
+>
+> When "Run" is clicked and Python is selected, load the Pyodide runtime (if not already loaded).
+>
+> Execute the python code.
+>
+> Critical: You must redirect Python's stdout (print statements) so they appear in our existing Terminal component, just like the JavaScript logs do.
+>
+> Handle errors gracefully (e.g., SyntaxError in Python) and display them in the terminal.
+>
+> Performance: Since WASM libraries are large, ensure Pyodide is loaded asynchronously/lazily (only load it when the user selects Python or first clicks Run) to avoid slowing down the initial page load.
+>
+> Deliverables:
+>
+> Updated App.jsx (or where the state resides) to handle language switching.
+>
+> Updated CodeEditor.jsx to accept a language prop.
+>
+> The logic to initialize Pyodide and run code (can be a utility file like pyodideUtils.js or inside the component).
+>
+> Explanation: Briefly explain which library you chose and why, and how you handled the stdout redirection.
+
