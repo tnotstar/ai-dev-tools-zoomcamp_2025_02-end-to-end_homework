@@ -1,29 +1,13 @@
 services:
-  # Backend Service
+  # Unified Service
   - type: web
-    name: coding-interview-backend
+    name: coding-interview-platform
     runtime: docker
-    repo: https://github.com/tnotstar/ai-dev-tools-zoomcamp_2025_02-end-to-end_homework # Render will auto-fill this if connected
+    repo: https://github.com/tnotstar/ai-dev-tools-zoomcamp_2025_02-end-to-end_homework
     plan: free
-    dockerContext: backend
+    dockerContext: .
     dockerfilePath: Dockerfile
     envVars:
       - key: PORT
-        value: 10000 # Render expects web services to listen on port 10000 by default or honors PORT env
-    region: frankfurt # or frankfurt, etc.
-
-  # Frontend Service
-  - type: web
-    name: coding-interview-frontend
-    runtime: docker
-    plan: free
-    dockerContext: frontend
-    dockerfilePath: Dockerfile
-    envVars:
-      - key: PORT
-        value: 5173
-      - key: VITE_API_URL
-        fromService:
-          type: web
-          name: coding-interview-backend
-          property: host
+        value: 10000 
+    region: frankfurt

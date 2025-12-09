@@ -367,7 +367,7 @@ We have included a `render.yaml` Blueprint file to make deploying to Render.com 
 
 > **Note**: The frontend service relies on the backend URL. Render's Blueprint automatically routes the backend URL to the frontend via the `VITE_API_URL` environment variable.
 
-## ☁️ Deploying to Google Cloud Run
+## ☁️ Deploying to Google Cloud Run (Unified)
 
 To deploy the application to Google Cloud Run, follow these steps:
 
@@ -376,11 +376,7 @@ To deploy the application to Google Cloud Run, follow these steps:
 - A Google Cloud Project
 
 ### 1. Run the Deployment Script
-We have provided a convenience script `deploy.sh` that automates the entire process:
-1.  Enables required Google Cloud services (Artifact Registry, Cloud Build, Cloud Run).
-2.  Creates an Artifact Registry repository.
-3.  Builds and deploys the **Backend** service.
-4.  Builds and deploys the **Frontend** service (automatically linking it to the deployed backend).
+The `deploy.sh` script now deploys the unified application (frontend + backend in one container):
 
 ```bash
 # Make the script executable
@@ -390,47 +386,21 @@ chmod +x deploy.sh
 ./deploy.sh
 ```
 
-### 2. Manual Deployment Steps (Reference)
-If you prefer to run the commands manually:
-
-**Backend:**
-```bash
-# Enable Sticky Sessions for Socket.io
-gcloud run deploy interview-backend \
-  --source . \
-  --region us-central1 \
-  --allow-unauthenticated \
-  --session-affinity \
-  --port 3000
-```
-
-**Frontend:**
-```bash
-# Get Backend URL
-BACKEND_URL=$(gcloud run services describe interview-backend --region us-central1 --format 'value(status.url)')
-
-# Deploy Frontend with Backend URL
-gcloud run deploy interview-frontend \
-  --source frontend \
-  --region us-central1 \
-  --allow-unauthenticated \
-  --set-env-vars VITE_API_URL=$BACKEND_URL
-```
-
 ### Clean Up
-To avoid unexpected charges, delete the services when you are done:
+To avoid unexpected charges:
 ```bash
-gcloud run services delete interview-backend --region us-central1
-gcloud run services delete interview-frontend --region us-central1
+gcloud run services delete interview-platform --region us-central1
 ```
 
-## 🤝 Contributing
+## 🚀 Deploying to Render.com (Unified)
 
-Contributions are welcome! Please feel free to submit issues or pull requests.
+We have updated `render.yaml` to deploy the unified application.
 
-## 📄 License
-
-MIT License - feel free to use this project for your interviews!
+1.  **Push your code** to a GitHub/GitLab repository.
+2.  **Log in to Render.com** and go to "Blueprints".
+3.  **Click "New Blueprint Instance"** and select your repository.
+4.  Render will automatically detect the `render.yaml` file and set up the `coding-interview-platform` service.
+5.  **Click "Apply"** to deploy.
 
 ## 🎯 Future Enhancements
 

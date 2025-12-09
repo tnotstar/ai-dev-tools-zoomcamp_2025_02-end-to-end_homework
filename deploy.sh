@@ -10,8 +10,7 @@ set -e
 PROJECT_ID=$(gcloud config get-value project)
 REGION="us-central1"
 REPO_NAME="coding-interview-repo"
-BACKEND_SERVICE="interview-backend"
-FRONTEND_SERVICE="interview-frontend"
+SERVICE_NAME="interview-platform"
 
 echo "🚀 Starting Deployment to Google Cloud Run..."
 echo "Project ID: $PROJECT_ID"
@@ -42,54 +41,32 @@ else
     echo "✅ Repository $REPO_NAME already exists."
 fi
 
-# 3. Build and Deploy Backend
+# 3. Build and Deploy Unified Service
 echo "--------------------------------------------------"
-echo "🔧 Building and Deploying Backend..."
+echo "🔧 Building and Deploying Unified Platform..."
 
-# Build Backend Image
-gcloud builds submit --tag "$REGION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/$BACKEND_SERVICE" . -f backend/Dockerfile
+# Build Unified Image (from root Dockerfile)
+gcloud builds submit --tag "$REGION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/$SERVICE_NAME" .
 
-# Deploy Backend Service
+# Deploy Cloud Run Service
 # --session-affinity: sticky sessions for Socket.io
 # --allow-unauthenticated: makes it public
-gcloud run deploy $BACKEND_SERVICE \
-    --image "$REGION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/$BACKEND_SERVICE" \
+gcloud run deploy $SERVICE_NAME \
+    --image "$REGION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/$SERVICE_NAME" \
     --region $REGION \
     --platform managed \
     --allow-unauthenticated \
     --session-affinity \
     --port 3000
 
-# Get Backend URL
-BACKEND_URL=$(gcloud run services describe $BACKEND_SERVICE --region $REGION --format 'value(status.url)')
-echo "✅ Backend deployed at: $BACKEND_URL"
-
-# 4. Build and Deploy Frontend
-echo "--------------------------------------------------"
-echo "🎨 Building and Deploying Frontend..."
-
-# Build Frontend Image
-gcloud builds submit --tag "$REGION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/$FRONTEND_SERVICE" frontend
-
-# Deploy Frontend Service
-# Pass VITE_API_URL as environment variable
-gcloud run deploy $FRONTEND_SERVICE \
-    --image "$REGION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/$FRONTEND_SERVICE" \
-    --region $REGION \
-    --platform managed \
-    --allow-unauthenticated \
-    --set-env-vars VITE_API_URL=$BACKEND_URL
-
-# Get Frontend URL
-FRONTEND_URL=$(gcloud run services describe $FRONTEND_SERVICE --region $REGION --format 'value(status.url)')
+# Get Service URL
+SERVICE_URL=$(gcloud run services describe $SERVICE_NAME --region $REGION --format 'value(status.url)')
 
 echo "--------------------------------------------------"
 echo "🎉 Deployment Complete!"
 echo "--------------------------------------------------"
-echo "Backend URL: $BACKEND_URL"
-echo "Frontend URL: $FRONTEND_URL"
+echo "App URL: $SERVICE_URL"
 echo "--------------------------------------------------"
-echo "Important: Session Affinity is enabled on the backend to ensure sticky sessions for Socket.io."
-echo "To clean up services later, run:"
-echo "gcloud run services delete $BACKEND_SERVICE --region $REGION"
-echo "gcloud run services delete $FRONTEND_SERVICE --region $REGION"
+echo "Important: Session Affinity is enabled to ensure sticky sessions for Socket.io."
+echo "To clean up, run:"
+echo "gcloud run services delete $SERVICE_NAME --region $REGION"

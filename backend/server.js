@@ -32,10 +32,7 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Redirect root to API docs
-app.get('/', (req, res) => {
-  res.redirect('/api-docs');
-});
+
 
 app.post('/api/rooms', (req, res) => {
   const roomId = uuidv4();
@@ -165,7 +162,19 @@ io.on('connection', (socket) => {
   });
 });
 
+// Serve static files in production
+const distPath = path.join(__dirname, 'public');
+if (require.main === module || process.env.NODE_ENV === 'production') {
+  app.use(express.static(distPath));
 
+  // Handle client-side routing
+  app.get('*', (req, res, next) => {
+    if (req.url.startsWith('/api') || req.url.startsWith('/socket.io')) {
+      return next();
+    }
+    res.sendFile(path.join(distPath, 'index.html'));
+  });
+}
 const PORT = process.env.PORT || 3000;
 
 if (require.main === module) {

@@ -2,11 +2,15 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const getApiUrl = () => {
-  let url = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-  if (!url.startsWith('http')) {
-    url = `https://${url}`;
+  if (import.meta.env.VITE_API_URL) {
+    let url = import.meta.env.VITE_API_URL;
+    if (!url.startsWith('http')) {
+      url = `https://${url}`;
+    }
+    return url;
   }
-  return url;
+  // Default to relative path for unified deployment, or localhost for local dev if needed (handled by proxy or CORS usually, but empty string works for standard fetch on same origin)
+  return '';
 };
 
 const API_URL = getApiUrl();

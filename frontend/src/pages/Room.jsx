@@ -5,11 +5,14 @@ import CodeEditor from '../components/CodeEditor';
 import Terminal from '../components/Terminal';
 
 const getSocketUrl = () => {
-  let url = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-  if (!url.startsWith('http')) {
-    url = `https://${url}`;
+  if (import.meta.env.VITE_API_URL) {
+    let url = import.meta.env.VITE_API_URL;
+    if (!url.startsWith('http')) {
+      url = `https://${url}`;
+    }
+    return url;
   }
-  return url;
+  return undefined; // Socket.io defaults to window.location if url is undefined
 };
 
 const SOCKET_URL = getSocketUrl();
