@@ -23,6 +23,14 @@ describe('Backend API Tests', () => {
     });
   });
 
+  describe('GET /', () => {
+    it('should redirect to /api-docs', async () => {
+      const res = await request(app).get('/');
+      expect(res.statusCode).toEqual(302);
+      expect(res.headers.location).toEqual('/api-docs');
+    });
+  });
+
   describe('POST /api/rooms', () => {
     it('should create a new room and return 201', async () => {
       const res = await request(app).post('/api/rooms');

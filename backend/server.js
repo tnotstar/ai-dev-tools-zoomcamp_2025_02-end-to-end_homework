@@ -32,6 +32,11 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Redirect root to API docs
+app.get('/', (req, res) => {
+  res.redirect('/api-docs');
+});
+
 app.post('/api/rooms', (req, res) => {
   const roomId = uuidv4();
   rooms.set(roomId, {
